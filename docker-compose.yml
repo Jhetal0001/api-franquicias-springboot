@@ -1,0 +1,33 @@
+services:
+  # Servicio de la base de datos MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - spring-mongo-net
+
+  # Servicio de tu aplicación Spring Boot
+  app:
+    build: .
+    container_name: springboot_app_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+    networks:
+      - spring-mongo-net
+
+# Define los volúmenes y redes
+volumes:
+  mongo-data:
+
+networks:
+  spring-mongo-net:
+    driver: bridge
