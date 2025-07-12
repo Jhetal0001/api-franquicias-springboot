@@ -1,14 +1,15 @@
-# Usa una imagen base de Java. OpenJDK 17 es una excelente opción para Spring Boot 3.
-FROM openjdk:17-jdk-slim
+# --- Etapa 1: Construcción (Build Stage) ---
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn package -DskipTests
 
-# Argumento para especificar la ruta del archivo JAR que genera Maven o Gradle.
-ARG JAR_FILE=target/*.jar
-
-# Copia el archivo JAR generado a la imagen del contenedor con un nombre simple.
-COPY ${JAR_FILE} app.jar
-
-# Expone el puerto en el que correrá la aplicación dentro del contenedor.
+# --- Etapa 2: Ejecución (Runtime Stage) ---
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+RUN apt-get update && apt-get install -y ca-certificates && apt-get clean
 EXPOSE 8080
-
-# El comando que se ejecutará cuando el contenedor inicie.
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

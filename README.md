@@ -14,6 +14,36 @@ Antes de empezar, asegurarse de tener instalado lo siguiente:
 
 ---
 
+## 🚀 API Desplegada en la Nube
+
+La API está desplegada en Google Cloud Run y está lista para ser probada.
+
+**URL Base:** `https://gestor-franquicias-365184637567.us-central1.run.app`
+
+### Crear una Nueva Franquicia
+
+- **Método:** `POST`
+- **Endpoint:** `/api/franquicias`
+
+**Ejemplo de Petición (`cURL`):**
+```bash
+curl -X POST [https://gestor-franquicias-365184637567.us-central1.run.app/api/franquicias](https://gestor-franquicias-365184637567.us-central1.run.app/api/franquicias) \
+-H "Content-Type: application/json" \
+-d '{
+    "nombre": "Franquicia desde la Nube"
+}'
+```
+
+**Respuesta Exitosa (Código 201 Created):**
+```bash
+{
+    "id": "668f8e7b3c6d7a1234567890",
+    "nombre": "Franquicia desde la Nube",
+    "sucursales": null
+}
+```
+---
+
 ## ⚙️ Despliegue Local
 
 Sigue estos pasos para levantar el proyecto en su entorno local.
